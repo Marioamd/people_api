@@ -1,4 +1,5 @@
-from marshmallow import Schema, fields, validate
+from marshmallow import Schema, fields, validate, ValidationError
+from Models.roles_model import Roles
 
 class UserSchema(Schema):
     name = fields.Str(required=True, validate=validate.Length(min=1))
@@ -14,4 +15,6 @@ class UserSchema(Schema):
     phone_prefix = fields.Str()
     phone_number = fields.Str()
    
-    
+    def validate_role_id(self, id):
+        if not Roles.query.get(id):
+            raise ValidationError("Role does not exist.")
