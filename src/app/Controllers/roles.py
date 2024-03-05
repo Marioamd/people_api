@@ -55,7 +55,7 @@ def delete_role(id):
     if not role:
         return jsonify({'message': 'Role Not found'}),404
   
-    db.session.delete(role)
+    role.active = False
     db.session.commit()
 
     return role_schema.jsonify(role)

@@ -55,7 +55,7 @@ def delete_user(id):
     if not user:
         return jsonify({'message': 'User Not found'}),404
     
-    db.session.delete(user)
+    user.active = False
     db.session.commit()
     
     return user_schema.jsonify(user)

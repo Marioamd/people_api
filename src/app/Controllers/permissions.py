@@ -56,7 +56,7 @@ def delete_permission(id):
     if not permission:
         return jsonify({'message': 'Permission Not found'}),404
   
-    db.session.delete(permission)
+    permission.active = False
     db.session.commit()
 
     return permission_schema.jsonify(permission)

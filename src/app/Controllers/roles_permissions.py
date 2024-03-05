@@ -58,7 +58,7 @@ def delete_role_permission(role_id, permission_id):
     if not role_permission:
         return jsonify({'message': 'Role or Permission Not found'}),404
   
-    db.session.delete(role_permission)
+    role_permission.active = False
     db.session.commit()
 
     return role_permission_schema.jsonify(role_permission)
