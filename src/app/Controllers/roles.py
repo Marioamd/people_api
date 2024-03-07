@@ -21,8 +21,19 @@ def create_role():
 
 def get_roles():
 
-    all_roles = Roles.query.all()
-    result = roles_schema.dump(all_roles)
+    active_roles = request.args.get('active', '')
+    
+    if active_roles == 'true':
+        roles = Roles.query.filter_by(active=True).all()
+    elif active_roles == 'false':
+        roles = Roles.query.filter_by(active=False).all()
+    else:
+        roles = Roles.query.all()
+    
+    if not roles:
+        return jsonify({'message': 'Roles not found!'}), 404
+
+    result = roles_schema.dump(active_roles)
 
     return jsonify(result)
 

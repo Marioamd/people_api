@@ -21,8 +21,19 @@ def create_user():
 
 def get_users():
 
-    all_users = Users.query.all()
-    result = users_schema.dump(all_users)
+    active_users = request.args.get('active', '')
+    
+    if active_users == 'true':
+        users = Users.query.filter_by(active=True).all()
+    elif active_users == 'false':
+        users = Users.query.filter_by(active=False).all()
+    else:
+        users = Users.query.all()
+    
+    if not users:
+        return jsonify({'message': 'Users not found!'}), 404
+
+    result = users_schema.dump(users)
 
     return jsonify(result)
 
