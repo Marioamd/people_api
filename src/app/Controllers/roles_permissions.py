@@ -21,8 +21,19 @@ def create_role_permission():
 
 def get_roles_permissions():
 
-    all_roles_permissions = Roles_Permissions.query.all()
-    result = roles_permissions_schema.dump(all_roles_permissions)
+    active_roles_permissions = request.args.get('active', '')
+    
+    if active_roles_permissions == 'true':
+        roles_permissions = Roles_Permissions.query.filter_by(active=True).all()
+    elif active_roles_permissions == 'false':
+        roles_permissions = Roles_Permissions.query.filter_by(active=False).all()
+    else:
+        roles_permissions = Roles_Permissions.query.all()
+    
+    if not roles_permissions:
+        return jsonify({'message': 'Roles-Permissions not found!'}), 404
+    
+    result = roles_permissions_schema.dump(active_roles_permissions)
 
     return jsonify(result)
 
@@ -58,7 +69,7 @@ def delete_role_permission(role_id, permission_id):
     if not role_permission:
         return jsonify({'message': 'Role or Permission Not found'}),404
   
-    db.session.delete(role_permission)
+    role_permission.active = False
     db.session.commit()
 
     return role_permission_schema.jsonify(role_permission)

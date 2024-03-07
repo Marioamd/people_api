@@ -21,8 +21,19 @@ def create_permission():
 
 def get_permissions():
 
-    all_permissions = Permissions.query.all()
-    result = permissions_schema.dump(all_permissions)
+    active_permissions = request.args.get('active', '')
+    
+    if active_permissions == 'true':
+        permissions = Permissions.query.filter_by(active=True).all()
+    elif active_permissions == 'false':
+        permissions = Permissions.query.filter_by(active=False).all()
+    else:
+        permissions = Permissions.query.all()
+    
+    if not permissions:
+        return jsonify({'message': 'Permissions not found!'}), 404
+    
+    result = permissions_schema.dump(active_permissions)
 
     return jsonify(result)
 
@@ -56,7 +67,7 @@ def delete_permission(id):
     if not permission:
         return jsonify({'message': 'Permission Not found'}),404
   
-    db.session.delete(permission)
+    permission.active = False
     db.session.commit()
 
     return permission_schema.jsonify(permission)

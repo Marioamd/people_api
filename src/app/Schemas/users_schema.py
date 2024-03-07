@@ -15,6 +15,6 @@ class UserSchema(Schema):
     phone_prefix = fields.Str()
     phone_number = fields.Str()
    
-    def validate_role_id(self, id):
-        if not Roles.query.get(id):
+    def validate_role_id(self, role_id):
+        if not Roles.query.get(role_id):
             raise ValidationError("Role does not exist.")

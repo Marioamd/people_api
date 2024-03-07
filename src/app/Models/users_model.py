@@ -16,6 +16,7 @@ class Users(db.Model):
     phone_prefix = db.Column(db.String(10),nullable=True)
     phone_number = db.Column(db.String(20),nullable=True)
     
+    active = db.Column(db.Boolean, default=True)
 
     def __init__(self,name,lastname,dni,role_id,email,password,avatar_url,country,city,address,phone_prefix,phone_number):
         self.name = name

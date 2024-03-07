@@ -6,6 +6,8 @@ class Roles(db.Model):
     id = db.Column(db.Integer, primary_key=True, unique=True)
     name = db.Column(db.String(30), nullable=False)
 
+    active = db.Column(db.Boolean, default=True)
+
     users = db.relationship('users', backref='role', lazy=True)
     permissions = db.relationship('permissions', secondary=Roles_Permissions, backref=db.backref('roles', lazy=True))
     
