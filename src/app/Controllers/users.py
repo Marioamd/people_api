@@ -1,6 +1,6 @@
 from flask import jsonify, request
 from app import user_schema, users_schema, db
-from Models.users_model import Users
+from app.Models.users_model import Users
 
 def create_user():
     

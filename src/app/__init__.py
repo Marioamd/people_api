@@ -31,3 +31,7 @@ role_permission_schema = RolePermissionSchema()
 roles_permissions_schema = RolePermissionSchema(many=True)
 
 
+from .Routes import users_routes
+from .Routes import roles_routes
+from .Routes import roles_permissions_routes
+from .Routes import permissions_routes

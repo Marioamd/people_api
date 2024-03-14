@@ -1,6 +1,6 @@
 from flask import jsonify, request
 from app import role_schema, roles_schema, db
-from Models.roles_model import Roles
+from app.Models.roles_model import Roles
 
 def create_role():
     
@@ -33,7 +33,7 @@ def get_roles():
     if not roles:
         return jsonify({'message': 'Roles not found!'}), 404
 
-    result = roles_schema.dump(active_roles)
+    result = roles_schema.dump(roles)
 
     return jsonify(result)
 
