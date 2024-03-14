@@ -1,6 +1,6 @@
 from marshmallow import Schema, fields, validate, ValidationError
-from Models.roles_model import Roles
-from Models.permissions_model import Permissions
+from app.Models.roles_model import Roles
+from app.Models.permissions_model import Permissions
 
 class RolePermissionSchema(Schema):
     role_id = fields.Int(required=True, validate=validate.Range(min=1))

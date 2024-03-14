@@ -1,6 +1,6 @@
 from flask import jsonify, request
 from app import permission_schema, permissions_schema, db
-from Models.permissions_model import Permissions
+from app.Models.permissions_model import Permissions
 
 def create_permission():
     

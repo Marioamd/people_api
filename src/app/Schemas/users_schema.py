@@ -1,10 +1,10 @@
 from marshmallow import Schema, fields, validate, ValidationError
-from Models.roles_model import Roles
+from app.Models.roles_model import Roles
 
 class UserSchema(Schema):
     name = fields.Str(required=True, validate=validate.Length(min=1))
     lastname = fields.Str(required=True, validate=validate.Length(min=1))
-    dni = fields.Str(required=True, validate=validate.Length(min=1)(max=10))
+    dni = fields.Str(required=True, validate=[validate.Length(min=1), validate.Length(max=10)])
     role_id = fields.Int(required=True, validate=validate.Range(min=1))
     email = fields.Str(required=True, validate=validate.Length(min=1))
     password = fields.Str(required=True, validate=validate.Length(min=1))
