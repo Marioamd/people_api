@@ -1,68 +1,50 @@
 from flask import jsonify, request
 from app import role_schema, roles_schema, db
 from app.Models.roles_model import Roles
-from app.Services.security import Security
+
 
 def create_role():
-
-    token = request.headers.get('Authorization')
-    has_access = Security.verify_token(token)
-
-    if has_access:
-        try:
-            errors = role_schema.validate(request.json)
-            if errors:
-                return jsonify({"errors": errors}), 400
+    
+    errors = role_schema.validate(request.json)
+    if errors:
+        return jsonify({"errors": errors}), 400
             
-            role_data = role_schema.load(request.json)
-            new_role = Roles(**role_data)
+    role_data = role_schema.load(request.json)
+    new_role = Roles(**role_data)
 
-            db.session.add(new_role)
-            db.session.commit()
+    db.session.add(new_role)
+    db.session.commit()
 
-            result = role_schema.dump(new_role)
-            return jsonify(result), 201 
+    result = role_schema.dump(new_role)
+    return jsonify(result), 201 
         
-        except Exception as e:
-            return jsonify({"message": str(e)}), 500
-    else:
-        return jsonify({'message': 'Unauthorized'}), 401
-
 
 def get_roles():
     
-    token = request.headers.get('Authorization')
-    has_access = Security.verify_token(token)
-
-    if has_access:
-        try:
-            active_roles = request.args.get('active', '')
+    active_roles = request.args.get('active', '')
             
-            if active_roles == 'true':
-                roles = Roles.query.filter_by(active=True).all()
-            elif active_roles == 'false':
-                roles = Roles.query.filter_by(active=False).all()
-            else:
-                roles = Roles.query.all()
-            
-            if not roles:
-                return jsonify({'message': 'Roles not found!'}), 404
-
-            result = roles_schema.dump(roles)
-            return jsonify(result)
-        
-        except Exception as e:
-            return jsonify({"message": str(e)}), 500
+    if active_roles == 'true':
+        roles = Roles.query.filter_by(active=True).all()
+    elif active_roles == 'false':
+        roles = Roles.query.filter_by(active=False).all()
     else:
-        return jsonify({'message': 'Unauthorized'}), 401
+        roles = Roles.query.all()
+            
+    if not roles:
+        return jsonify({'message': 'Roles not found!'}), 404
 
+    result = roles_schema.dump(roles)
+    return jsonify(result)
 
 
 def get_role(id):
-    
     role = Roles.query.get(id)
 
-    return role_schema.jsonify(role)
+    if not role:
+        return jsonify({'message': 'Role Not found'}), 404
+
+    result = role_schema.dump(role)
+    return jsonify(result)
 
 
 def update_role(id):
