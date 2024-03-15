@@ -1,10 +1,17 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI']='mysql+pymysql://root@localhost/peoplemicroservice'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS']=False
+
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv("DATABASE_URL")
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.secret_key = os.getenv("SECRET_KEY")
+jwt_key = os.getenv("JWT_KEY")
 
 db = SQLAlchemy(app)
 ma = Marshmallow(app)
@@ -35,3 +42,4 @@ from .Routes import users_routes
 from .Routes import roles_routes
 from .Routes import roles_permissions_routes
 from .Routes import permissions_routes
+from .Routes import login_route
