@@ -18,7 +18,7 @@ def create_user_route():
 def update_user_route(id):
     return update_user(id)
 
-@app.route('/users/<id>', methods=['DELETE'])
+@app.route('/users/<id>', methods=['PUT'])
 def delete_user_route(id):
     return delete_user(id)
 

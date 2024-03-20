@@ -23,7 +23,7 @@ def create_role_route():
 def update_role_route(id):
     return update_role(id)
 
-@app.route('/roles/<id>', methods=['DELETE'])
+@app.route('/roles/<id>', methods=['PUT'])
 @token_required
 def delete_role_route(id):
     return delete_role(id)

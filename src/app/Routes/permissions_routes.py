@@ -18,7 +18,7 @@ def create_permission_route():
 def update_permission_route(id):
     return update_permission(id)
 
-@app.route('/permissions/<id>', methods=['DELETE'])
+@app.route('/permissions/<id>', methods=['PUT'])
 def delete_permission_route(id):
     return delete_permission(id)
 
