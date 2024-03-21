@@ -40,16 +40,19 @@ def get_users():
     if not users:
         return jsonify({'message': 'Users not found!'}), 404
 
-    result = users_schema.dump(users)
-
-    return jsonify(result)
+    return jsonify(users_schema.dump(users))
 
 
 def get_user(id):
     
     user = Users.query.get(id)
 
-    return user_schema.jsonify(user)
+    if not user:
+        return jsonify({'message': 'User not found!'}), 404
+    
+    result = user_schema.dump(user)
+
+    return jsonify(result)
 
 
 def update_user(id):
@@ -63,8 +66,9 @@ def update_user(id):
             setattr(user, key, value)
 
     db.session.commit()
+    result = user_schema.dump(user)
 
-    return user_schema.jsonify(user)
+    return jsonify(result)
 
 
 def delete_user(id):
@@ -76,5 +80,6 @@ def delete_user(id):
     user.active = False
     db.session.commit()
     
-    return user_schema.jsonify(user)
+    return jsonify({'message': 'User deactivated successfully'})
+
 
