@@ -2,47 +2,49 @@ from flask import jsonify, request
 from app import role_schema, roles_schema, db
 from app.Models.roles_model import Roles
 
+
 def create_role():
     
     errors = role_schema.validate(request.json)
     if errors:
-        return jsonify({"errores": errors}), 400
-    
-    if len(request.json) > len(role_schema.fields):
-        return jsonify({"error": "Additional fields are not allowed"}), 400
-    
-    new_role = Roles(**request.json)
+        return jsonify({"errors": errors}), 400
+            
+    role_data = role_schema.load(request.json)
+    new_role = Roles(**role_data)
 
     db.session.add(new_role)
     db.session.commit()
 
-    return role_schema.jsonify(new_role)
-
+    result = role_schema.dump(new_role)
+    return jsonify(result), 201 
+        
 
 def get_roles():
-
-    active_roles = request.args.get('active', '')
     
+    active_roles = request.args.get('active', '')
+            
     if active_roles == 'true':
         roles = Roles.query.filter_by(active=True).all()
     elif active_roles == 'false':
         roles = Roles.query.filter_by(active=False).all()
     else:
         roles = Roles.query.all()
-    
+            
     if not roles:
         return jsonify({'message': 'Roles not found!'}), 404
 
     result = roles_schema.dump(roles)
-
     return jsonify(result)
 
 
 def get_role(id):
-    
     role = Roles.query.get(id)
 
-    return role_schema.jsonify(role)
+    if not role:
+        return jsonify({'message': 'Role Not found'}), 404
+
+    result = role_schema.dump(role)
+    return jsonify(result)
 
 
 def update_role(id):

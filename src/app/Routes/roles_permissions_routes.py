@@ -18,6 +18,6 @@ def create_role_permission_route():
 def update_role_permission_route(role_id, permission_id):
     return update_role_permission(role_id, permission_id)
 
-@app.route('/roles_permissions/<role_id>/<permission_id>', methods=['DELETE'])
+@app.route('/roles_permissions/<role_id>/<permission_id>', methods=['PUT'])
 def delete_role_permission_route(role_id, permission_id):
     return delete_role_permission(role_id, permission_id)

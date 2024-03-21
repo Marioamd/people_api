@@ -5,7 +5,7 @@ class Users(db.Model):
     id = db.Column(db.Integer, primary_key=True, unique=True, nullable=False)
     name = db.Column(db.String(30), nullable=False)
     lastname = db.Column(db.String(30),nullable=False)
-    dni = db.Column(db.String(10),nullable=False)
+    dni = db.Column(db.String(10),nullable=False, unique=True)
     role_id = db.Column(db.Integer, db.ForeignKey('roles.id'),nullable=False)
     email = db.Column(db.String(100),nullable=False)
     password = db.Column(db.String(255), nullable=False)
@@ -18,7 +18,7 @@ class Users(db.Model):
     
     active = db.Column(db.Boolean, default=True)
 
-    def __init__(self,name,lastname,dni,role_id,email,password,avatar_url,country,city,address,phone_prefix,phone_number):
+    def __init__(self, name, lastname, dni, role_id, email, password,avatar_url=None, country=None, city=None, address=None, phone_prefix=None, phone_number=None):
         self.name = name
         self.lastname = lastname
         self.dni = dni

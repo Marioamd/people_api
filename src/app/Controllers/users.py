@@ -1,6 +1,7 @@
 from flask import jsonify, request
 from app import user_schema, users_schema, db
 from app.Models.users_model import Users
+from app.Services.security import Security
 
 def create_user():
     
@@ -10,13 +11,19 @@ def create_user():
     
     if len(request.json) > len(user_schema.fields):
         return jsonify({"error": "Additional fields are not allowed"}), 400
+
+    user_data = user_schema.load(request.json)
+
+    hashed_password = Security.hash_password(user_data['password'])
+    user_data['password'] = hashed_password
     
-    new_user = Users(**request.json)
+    new_user = Users(**user_data)
 
     db.session.add(new_user)
     db.session.commit()
 
-    return user_schema.jsonify(new_user)
+    result = user_schema.dump(new_user)
+    return jsonify(result)
 
 
 def get_users():
@@ -33,16 +40,19 @@ def get_users():
     if not users:
         return jsonify({'message': 'Users not found!'}), 404
 
-    result = users_schema.dump(users)
-
-    return jsonify(result)
+    return jsonify(users_schema.dump(users))
 
 
 def get_user(id):
     
     user = Users.query.get(id)
 
-    return user_schema.jsonify(user)
+    if not user:
+        return jsonify({'message': 'User not found!'}), 404
+    
+    result = user_schema.dump(user)
+
+    return jsonify(result)
 
 
 def update_user(id):
@@ -56,8 +66,9 @@ def update_user(id):
             setattr(user, key, value)
 
     db.session.commit()
+    result = user_schema.dump(user)
 
-    return user_schema.jsonify(user)
+    return jsonify(result)
 
 
 def delete_user(id):
@@ -69,5 +80,6 @@ def delete_user(id):
     user.active = False
     db.session.commit()
     
-    return user_schema.jsonify(user)
+    return jsonify({'message': 'User deactivated successfully'})
+
 
