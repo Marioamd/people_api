@@ -16,7 +16,8 @@ def create_permission():
     db.session.add(new_permission)
     db.session.commit()
 
-    return permission_schema.jsonify(new_permission)
+    result = permission_schema.dump(new_permission)
+    return jsonify(result)
 
 
 def get_permissions():
@@ -34,7 +35,6 @@ def get_permissions():
         return jsonify({'message': 'Permissions not found!'}), 404
     
     result = permissions_schema.dump(active_permissions)
-
     return jsonify(result)
 
 
@@ -42,7 +42,8 @@ def get_permission(id):
     
     permission = Permissions.query.get(id)
 
-    return permission_schema.jsonify(permission)
+    result = permission_schema.dump(permission)
+    return jsonify(result)
 
 
 def update_permission(id):
@@ -57,7 +58,8 @@ def update_permission(id):
 
     db.session.commit()
 
-    return permission_schema.jsonify(permission)
+    result = permission_schema.dump(permission)
+    return jsonify(result)
 
 
 def delete_permission(id):
@@ -70,4 +72,5 @@ def delete_permission(id):
     permission.active = False
     db.session.commit()
 
-    return permission_schema.jsonify(permission)
+    result = permission_schema.dump(permission)
+    return jsonify(result)

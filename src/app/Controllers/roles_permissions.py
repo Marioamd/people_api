@@ -16,7 +16,8 @@ def create_role_permission():
     db.session.add(new_role_permission)
     db.session.commit()
 
-    return role_permission_schema.jsonify(new_role_permission)
+    result = role_permission_schema.dump(new_role_permission)
+    return jsonify(result)
 
 
 def get_roles_permissions():
@@ -34,15 +35,14 @@ def get_roles_permissions():
         return jsonify({'message': 'Roles-Permissions not found!'}), 404
     
     result = roles_permissions_schema.dump(active_roles_permissions)
-
     return jsonify(result)
 
 
 def get_role_permission(role_id):
     
     roles_permissions = Roles_Permissions.query.filter_by(role_id=role_id).all()
+    
     result = roles_permissions_schema.dump(roles_permissions)
-
     return jsonify(result)
 
 
@@ -59,7 +59,8 @@ def update_role_permission(role_id, permission_id):
 
     db.session.commit()
 
-    return role_permission_schema.jsonify(existing_role_permission)
+    result = role_permission_schema.dump(existing_role_permission)
+    return jsonify(result)
 
 
 def delete_role_permission(role_id, permission_id):
@@ -72,4 +73,5 @@ def delete_role_permission(role_id, permission_id):
     role_permission.active = False
     db.session.commit()
 
-    return role_permission_schema.jsonify(role_permission)
+    result = role_permission_schema.dump(role_permission)
+    return jsonify(result)

@@ -58,8 +58,9 @@ def update_role(id):
             setattr(role, key, value)
 
     db.session.commit()
-
-    return role_schema.jsonify(role)
+    
+    result = role_schema.dump(role)
+    return jsonify(result)
 
 
 def delete_role(id):
@@ -71,4 +72,5 @@ def delete_role(id):
     role.active = False
     db.session.commit()
 
-    return role_schema.jsonify(role)
+    result = role_schema.dump(role)
+    return jsonify(result)
